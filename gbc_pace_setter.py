@@ -32,10 +32,10 @@ UNBLOCK_SPEED = -200
 motor_speed = (MAX_SPEED - MIN_SPEED) / 2
 motor.run(motor_speed)
 
-event_count = 0
-total_events = 0
+ball_count = 0
+total_balls = 0
 total_time = 0.0
-cycle_events = 0
+cycle_balls = 0
 cycle_time = 0.0
 
 adjust_watch = StopWatch()
@@ -50,7 +50,7 @@ while True:
     # Count ball only if cooldown period has passed
     if ball_detected and cooldown_watch.time() >= BALL_COOLDOWN_MS:
         # print(f"{reflection}")
-        event_count += 1
+        ball_count += 1
         cooldown_watch.reset()
 
     # Check Cycle
@@ -58,15 +58,15 @@ while True:
         elapsed = adjust_watch.time() / 1000
         adjust_watch.reset()
 
-        total_events += event_count
-        cycle_events += event_count
+        total_balls += ball_count
+        cycle_balls += ball_count
         total_time += elapsed
         cycle_time += elapsed
-        event_count = 0
+        ball_count = 0
 
         if cycle_time >= AVG_INTERVAL_SEC:
-            cycle_avg_rate = cycle_events / cycle_time
-            total_avg_rate = total_events / total_time
+            cycle_avg_rate = cycle_balls / cycle_time
+            total_avg_rate = total_balls / total_time
 
             if cycle_avg_rate > TARGET_RATE_UPPER:
                 motor_speed = max(MIN_SPEED, motor_speed - ADJUSTMENT_STEP)
@@ -75,9 +75,9 @@ while True:
 
             motor.run(motor_speed)
 
-            print(f"Cycle Rate: {cycle_avg_rate:.2f} bps | Target Rate: {TARGET_RATE_LOWER:.2f}<{TARGET_RATE:.2f}<{TARGET_RATE_UPPER:.2f} bps) | Speed: {motor_speed} deg/s | Total Rate: {total_avg_rate:.2f} bps | Total Time: {total_time:.1f}s | Total Balls: {total_events}")
+            print(f"Cycle Rate: {cycle_avg_rate:.2f} bps | Target Rate: {TARGET_RATE_LOWER:.2f}<{TARGET_RATE:.2f}<{TARGET_RATE_UPPER:.2f} bps) | Speed: {motor_speed} deg/s | Total Rate: {total_avg_rate:.2f} bps | Total Time: {total_time:.1f}s | Total Balls: {total_balls}")
 
-            cycle_events = 0
+            cycle_balls = 0
             cycle_time = 0.0
 
     # Anti Blocking System
