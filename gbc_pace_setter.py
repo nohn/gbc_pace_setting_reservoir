@@ -9,7 +9,7 @@ MIN_SPEED         = 10
 MAX_SPEED         = 500
 CHECK_INTERVAL_MS = 100
 AVG_INTERVAL_SEC  = 5    # You may want to set this lower for smaller adjustment steps
-BALL_THRESHOLD    = 5
+BALL_THRESHOLD    = 8
 BALL_COOLDOWN_MS  = 100  # Cooldown period for flank detection
 
 # Calculate lower and upper rate boundaries using TARGET_TOLERANCE
@@ -29,7 +29,7 @@ UNBLOCK_REVERSE_DEGREES = 20
 UNBLOCK_SPEED = -200
 
 # Initial Motor Speed
-motor_speed = (MAX_SPEED - MIN_SPEED) / 2
+motor_speed = 100
 motor.run(motor_speed)
 
 ball_count = 0
@@ -75,7 +75,7 @@ while True:
 
             motor.run(motor_speed)
 
-            print(f"Cycle Rate: {cycle_avg_rate:.2f} bps | Target Rate: {TARGET_RATE_LOWER:.2f}<{TARGET_RATE:.2f}<{TARGET_RATE_UPPER:.2f} bps) | Speed: {motor_speed} deg/s | Total Rate: {total_avg_rate:.2f} bps | Total Time: {total_time:.1f}s | Total Balls: {total_balls}")
+            print(f"Cycle Rate: {cycle_avg_rate:.2f} bps | Target Rate: {TARGET_RATE_LOWER:.2f}<{TARGET_RATE:.2f}<{TARGET_RATE_UPPER:.2f} bps) | Speed: {motor_speed} deg/s | Total Rate: {total_avg_rate:.2f} bps | Total Time: {total_time:.1f}s | Total Balls: {total_balls} | Angle: {motor.angle()}")
 
             cycle_balls = 0
             cycle_time = 0.0
@@ -84,6 +84,7 @@ while True:
     if block_watch.time() >= BLOCK_CHECK_INTERVAL_MS:
         current_angle = motor.angle()
         delta = abs(current_angle - last_angle)
+        # print(f"Delta: {delta}")
 
         if delta < BLOCKED_THRESHOLD_DEGREES and motor_speed > 0:
             print("Motor seems blocked — attempting to unblock.")
