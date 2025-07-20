@@ -3,7 +3,7 @@ from pybricks.parameters import Port
 from pybricks.tools import StopWatch
 
 TARGET_RATE       = 1.00 # Balls per second
-TARGET_TOLERANCE  = 0.10 # To avoid permament adjustments, allow 10% tolerance
+TARGET_TOLERANCE  = 0.05 # To avoid permament adjustments, allow 5% tolerance
 ADJUSTMENT_STEP   = 10
 MIN_SPEED         = 10
 MAX_SPEED         = 500
@@ -29,7 +29,7 @@ UNBLOCK_REVERSE_DEGREES = 20
 UNBLOCK_SPEED = -200
 
 # Initial Motor Speed
-motor_speed = 100
+motor_speed = 125*TARGET_RATE
 motor.run(motor_speed)
 
 ball_count = 0
@@ -75,7 +75,7 @@ while True:
 
             motor.run(motor_speed)
 
-            print(f"Cycle Rate: {cycle_avg_rate:.2f} bps | Target Rate: {TARGET_RATE_LOWER:.2f}<{TARGET_RATE:.2f}<{TARGET_RATE_UPPER:.2f} bps) | Speed: {motor_speed} deg/s | Total Rate: {total_avg_rate:.2f} bps | Total Time: {total_time:.1f}s | Total Balls: {total_balls} | Angle: {motor.angle()}")
+            print(f"Cycle Rate: {cycle_avg_rate:.2f} bps | Target Rate: {TARGET_RATE_LOWER:.2f}<{TARGET_RATE:.2f}<{TARGET_RATE_UPPER:.2f} bps) | Next Cycle Speed: {motor_speed} deg/s | Avg Rate: {total_avg_rate:.2f} bps | Tot Time: {total_time:.1f}s | Tot Balls: {total_balls} | Avg Speed: {motor.angle()/total_time:.0f} deg/s")
 
             cycle_balls = 0
             cycle_time = 0.0
