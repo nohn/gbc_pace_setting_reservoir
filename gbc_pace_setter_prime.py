@@ -26,7 +26,7 @@ sensor = ColorSensor(Port.A)
 # Init ABS
 block_watch = StopWatch()
 last_angle = motor.angle()
-BLOCK_CHECK_INTERVAL_MS = 300
+BLOCK_CHECK_INTERVAL_MS = 1000
 BLOCKED_THRESHOLD_DEGREES = 5  # if movement is less than this
 UNBLOCK_REVERSE_DEGREES = 20
 UNBLOCK_SPEED = -200
@@ -55,6 +55,8 @@ total_avg_rate = 0
 last_displayed_target_rate = None
 last_displayed_total_avg_rate = None
 
+paused = False
+
 while True:
     reflection = sensor.reflection()
     # print(f"{reflection}")
@@ -67,6 +69,7 @@ while True:
         cooldown_watch.reset()
 
     buttons = hub.buttons.pressed()
+    # Decrease speed
     if Button.LEFT in buttons:
         TARGET_RATE = max(0.05, TARGET_RATE - 0.05)
         print(f"TARGET_RATE decreased: {TARGET_RATE:.2f} bps")
@@ -77,6 +80,7 @@ while True:
         TARGET_RATE_LOWER = TARGET_RATE - (TARGET_RATE * TARGET_TOLERANCE)
         TARGET_RATE_UPPER = TARGET_RATE + (TARGET_RATE * TARGET_TOLERANCE)
 
+    # Increase speed
     if Button.RIGHT in buttons:
         TARGET_RATE = TARGET_RATE + 0.05
         print(f"TARGET_RATE increased: {TARGET_RATE:.2f} bps")
@@ -87,6 +91,19 @@ while True:
         TARGET_RATE_LOWER = TARGET_RATE - (TARGET_RATE * TARGET_TOLERANCE)
         TARGET_RATE_UPPER = TARGET_RATE + (TARGET_RATE * TARGET_TOLERANCE)
 
+    # Pause/Unpause Motor
+    if Button.BLUETOOTH in buttons:
+        paused = not paused
+        if paused:
+            print("Motor paused.")
+            motor.stop()
+            hub.display.text(f"R:{total_avg_rate:.3f}B:{total_balls}")
+        else:
+            print("Motor resumed.")
+            hub.display.text(f"T:{TARGET_RATE:.2f}")
+            motor.run(motor_speed)        
+
+    # Check Cycle
     if last_displayed_target_rate != TARGET_RATE:
         hub.display.text(f"{TARGET_RATE:.2f}")
         last_displayed_target_rate = TARGET_RATE
@@ -112,7 +129,8 @@ while True:
             elif cycle_avg_rate < TARGET_RATE_LOWER:
                 motor_speed = min(MAX_SPEED, motor_speed + ADJUSTMENT_STEP)
 
-            motor.run(motor_speed)
+            if not paused:
+                motor.run(motor_speed)
 
             print(f"CR: {cycle_avg_rate:.3f} bps | 60sAR: {bpm_avg_rate:.3f} bps | TAR: {total_avg_rate:.3f} bps | TR: {TARGET_RATE_LOWER:.2f}<{TARGET_RATE:.2f}<{TARGET_RATE_UPPER:.2f} bps) | NCS: {motor_speed} deg/s | AS: {motor.angle()/total_time:.0f} deg/s | TT: {total_time:.1f}s | TB: {total_balls}")
 
@@ -137,7 +155,7 @@ while True:
                 hub.light.on(Color.GREEN)
 
     # Anti Blocking System
-    if block_watch.time() >= BLOCK_CHECK_INTERVAL_MS:
+    if not paused and block_watch.time() >= BLOCK_CHECK_INTERVAL_MS:
         current_angle = motor.angle()
         delta = abs(current_angle - last_angle)
         # print(f"Delta: {delta}")

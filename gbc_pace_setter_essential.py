@@ -27,7 +27,7 @@ sensor = ColorSensor(Port.B)
 # Init ABS
 block_watch = StopWatch()
 last_angle = motor.angle()
-BLOCK_CHECK_INTERVAL_MS = 300
+BLOCK_CHECK_INTERVAL_MS = 1000
 BLOCKED_THRESHOLD_DEGREES = 5  # if movement is less than this
 UNBLOCK_REVERSE_DEGREES = 20
 UNBLOCK_SPEED = -200
