@@ -3,8 +3,8 @@ from pybricks.parameters import Port, Color, Button, Side
 from pybricks.tools import StopWatch
 from pybricks.hubs import PrimeHub
 
-TARGET_RATE       = 0.95  # Balls per second
-TARGET_TOLERANCE  = 0.05  # 5% tolerance
+TARGET_RATE       = 1.00 # Balls per second
+TARGET_TOLERANCE  = 0.05 # To avoid permament adjustments, allow 5% tolerance
 ADJUSTMENT_STEP   = TARGET_RATE * 5
 INITAL_SPEED      = 125 * TARGET_RATE
 MIN_SPEED         = INITAL_SPEED / 2

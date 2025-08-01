@@ -5,11 +5,11 @@ from pybricks.hubs import EssentialHub
 from pybricks.parameters import Color
 
 TARGET_RATE       = 1.00 # Balls per second
-TARGET_TOLERANCE  = 0.10 # To avoid permament adjustments, allow 10% tolerance
-ADJUSTMENT_STEP   = 10
-INITAL_SPEED      = 125*TARGET_RATE 
-MIN_SPEED         = MIN_SPEED=INITAL_SPEED/2
-MAX_SPEED         = INITAL_SPEED*2
+TARGET_TOLERANCE  = 0.05 # To avoid permament adjustments, allow 5% tolerance
+ADJUSTMENT_STEP   = TARGET_RATE * 5
+INITAL_SPEED      = 125 * TARGET_RATE
+MIN_SPEED         = INITAL_SPEED / 2
+MAX_SPEED         = INITAL_SPEED * 2
 CHECK_INTERVAL_MS = 100
 AVG_INTERVAL_SEC  = 5    # You may want to set this lower for smaller adjustment steps
 BALL_THRESHOLD    = 8
