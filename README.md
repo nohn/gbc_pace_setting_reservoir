@@ -5,5 +5,6 @@ Implementation of a LEGO(R) Great Ball Contraption pace setting reservoir in [py
 ## Features
 
 * Motor speed is adjusted automatically to achieve target output rate by measuring the effective output rate.
+* Anti Blocking System
 * Optional failure simulation (jams, starvation, bursts)
 * On prime hub: Control via buttons
